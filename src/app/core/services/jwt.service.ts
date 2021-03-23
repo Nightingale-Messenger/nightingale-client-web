@@ -38,8 +38,7 @@ export class JwtService {
       return null;
     }
     const jwt = JSON.parse(atob(token.split('.')[1]));
-
-    return {id: jwt.Id, userName: jwt.userName};
+    return {id: jwt.Id, userName: jwt.Username};
   }
 
   public getAccessTokenExp(token: string = this.accessToken): number {

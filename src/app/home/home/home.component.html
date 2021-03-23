@@ -1,0 +1,18 @@
+<div class="home-container" *ngIf="loggedIn">
+  <h1>Hello, {{userName}}</h1>
+
+  <iframe src="http://tylerlh.github.com/github-latest-commits-widget/?username=Nightingale-Messenger&repo=nightingale-client-web&limit=20"
+          allowtransparency="true" frameborder="0" scrolling="no" width="502px" height="252px"></iframe>
+</div>
+
+<div class="home-container" *ngIf="!loggedIn">
+  <button routerLink="auth/login">
+    Sign in
+  </button>
+
+  <p>or...</p>
+
+  <button routerLink="auth/register">
+    Sign Up
+  </button>
+</div>

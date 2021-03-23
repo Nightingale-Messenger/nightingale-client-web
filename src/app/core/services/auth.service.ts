@@ -56,9 +56,15 @@ export class AuthService {
       }));
   }
 
+  public logout(): void {
+    this.httpClient.post(`${environment.apiUrl}/auth/revoke`, {refreshToken: this.jwtService.refreshToken}).subscribe();
+    this.jwtService.removeTokens();
+    this.userService.removeUser();
+  }
+
   public refresh(): Observable<Tokens | null> {
     return this.httpClient.post<Tokens>(`${environment.apiUrl}/auth/refresh`,
-      this.jwtService.refreshToken).pipe(
+      {refreshToken: this.jwtService.refreshToken}).pipe(
       catchError(_ => {
         return of(null);
       })

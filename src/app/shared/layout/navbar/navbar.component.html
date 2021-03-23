@@ -1,0 +1,25 @@
+<nav>
+
+
+  <ul>
+    <li class="left">
+      <a><img class="logo" src="favicon.ico" alt=""></a>
+    </li>
+    <li class="left">
+      <a><p>Nightingale</p></a>
+    </li>
+    <li class="left">
+      <a class="item" routerLink="/home">Home</a>
+    </li>
+
+    <li class="right btn" *ngIf="!loggedIn">
+      <a class="item" routerLink="/auth/login">Sign in</a>
+    </li>
+    <li class="right btn" *ngIf="!loggedIn">
+      <a class="item" routerLink="/auth/register">Sign up</a>
+    </li>
+    <li class="right btn" *ngIf="loggedIn">
+      <a class="item" (click)="onLogout()">Logout</a>
+    </li>
+  </ul>
+</nav>

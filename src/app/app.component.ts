@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthService} from './core/services';
 
 @Component({
   selector: 'app-root',
@@ -9,10 +8,10 @@ import {AuthService} from './core/services';
 export class AppComponent implements OnInit {
   title = 'nightingale-client-web';
 
-  constructor(private authService: AuthService) {
+  constructor() {
   }
 
   ngOnInit(): void {
-    this.authService.tryPopulate();
+
   }
 }

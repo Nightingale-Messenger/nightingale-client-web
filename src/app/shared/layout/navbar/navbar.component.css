@@ -1,0 +1,55 @@
+nav {
+  background-color: var(--color-primary-2);
+  margin-bottom: 0.3rem;
+  padding: 0.4rem;
+}
+nav ul {
+  background-color: var(--color-primary-2);
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+nav li {
+  display: inline-block;
+}
+nav .right {
+  float: right;
+}
+nav .left {
+  float: left;
+}
+nav a {
+  font-size: 1.5rem;
+  padding: 0.2rem;
+  display: block;
+  margin: 0 0.2rem;
+  text-align: center;
+  text-decoration: none;
+}
+nav a:hover {
+  opacity: 0.8;
+}
+nav a.item:active {
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+nav a .btn {
+  border: none;
+}
+nav .btn:hover {
+  border-radius: 0.7rem;
+  background-color: var(--color-primary-3);
+}
+nav .btn:hover a {
+  color: white;
+}
+
+.logo {
+  display: block;
+  width: 40px;
+  height: 40px;
+  margin: auto;
+}
+
+/*# sourceMappingURL=navbar.component.css.map */

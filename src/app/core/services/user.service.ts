@@ -28,5 +28,14 @@ export class UserService {
     return this.isAuthenticatedSubject.value;
   }
 
+  public getUserName(): string {
+    return this.currentUserSubject.value.userName;
+  }
+
+  public removeUser(): void {
+    this.changeCurrentUser({} as User);
+    this.changeAuthStatus(false);
+  }
+
   constructor() { }
 }
