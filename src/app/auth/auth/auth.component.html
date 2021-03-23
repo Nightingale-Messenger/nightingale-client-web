@@ -1,0 +1,37 @@
+<div class="form-container" [ngClass]="{'submitting': isSubmitting}">
+  <form [formGroup]="form" (ngSubmit)="submit()" (keyup)="onInputChanged()">
+    <h2>{{title}}</h2>
+    <hr>
+    <div *ngIf="authType == 'register'">
+      <label for="name">Username</label>
+      <input formControlName="username" id="name" type="text">
+    </div>
+
+    <div>
+      <label for="email">Email</label>
+      <input formControlName="email" id="email"
+             type="email">
+    </div>
+
+    <div>
+      <label for="pwd">Password</label>
+      <input id="pwd" type="password"
+             formControlName="password">
+    </div>
+
+    <div *ngIf="authType == 'register'">
+      <label for="confirmPassword">Confirm password</label>
+      <input id="confirmPassword" type="password"
+             formControlName="confirmPassword">
+    </div>
+
+    <button type="button" (click)="submit()" [disabled]="!form.valid">{{title}}!</button>
+    <p *ngIf="error" style="color: red">Wrong credentials</p>
+    <hr>
+    <a *ngIf="authType == 'login'"
+       routerLink="/auth/register">Do not have an account?</a>
+    <a *ngIf="authType == 'register'"
+       routerLink="/auth/login">Already have an account?</a>
+
+  </form>
+</div>

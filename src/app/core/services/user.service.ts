@@ -24,5 +24,9 @@ export class UserService {
     this.isAuthenticatedSubject.next(status);
   }
 
+  public getStatus(): boolean {
+    return this.isAuthenticatedSubject.value;
+  }
+
   constructor() { }
 }

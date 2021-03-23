@@ -4,55 +4,55 @@ import {JwtService} from './jwt.service';
 import {UserService} from './user.service';
 import {Observable, of} from 'rxjs';
 import {environment} from '../../../environments/environment';
-import {catchError, finalize, tap} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 import {Tokens} from '../models';
 
 @Injectable()
 export class AuthService {
-  private refreshTokenTimeout = 0;
+  // @ts-ignore
+  private refreshTokenTimeout: NodeJS.Timeout = 0;
 
   constructor(private httpClient: HttpClient,
               private jwtService: JwtService,
               private userService: UserService) {
   }
 
-  public async tryPopulate(): Promise<void> {
+  public tryPopulate(): void {
+    console.log('Trying to get auth data...');
     const usr = this.jwtService.parseUserFromToken();
     if (this.jwtService.checkAccessTokenExp() && usr) {
       this.userService.changeCurrentUser(usr);
       this.userService.changeAuthStatus(true);
     } else if (this.jwtService.refreshToken !== '') {
-      const newTokens: Tokens | null =
-        await this.refresh().toPromise();
-      if (newTokens) {
-        this.handleNewTokens(this.refresh());
-      } else {
-        this.userService.changeAuthStatus(false);
-      }
+      this.handleNewTokens(this.refresh());
     } else {
       this.userService.changeAuthStatus(false);
     }
+
+    console.log(`Auth status: ${this.userService.getStatus()}`);
   }
 
-  public login(email: string, password: string): void {
-    this.httpClient.post<Tokens>(`${environment.apiUrl}/auth/login`,
+  public login(email: string, password: string): Observable<boolean> {
+    return this.httpClient.post<Tokens>(`${environment.apiUrl}/auth/login`,
       {email, password}).pipe(
-      catchError(_ => {
-        return of(null);
-      }),
-      tap(t => {
-        if (t) {
-          this.setAuth(t);
+      map((val: Tokens) => {
+        if (val) {
+          this.setAuth(val);
+          return true;
         }
-      })
-    );
+        return false;
+      }));
   }
 
-  public register(email: string, userName: string, password: string): void {
-    this.httpClient.post(environment.apiUrl + '/auth/register',
-      {Email: email, Password: password, UserName: userName})
-      .pipe(finalize(() => {
-        this.login(email, password);
+  public register(email: string, userName: string, password: string): Observable<boolean> {
+    return this.httpClient.post<any>(environment.apiUrl + '/auth/register',
+      {Email: email, Password: password, UserName: userName}, {observe: 'response'})
+      .pipe(map(val => {
+        if (val.ok) {
+          this.login(email, password).subscribe();
+          return true;
+        }
+        return false;
       }));
   }
 

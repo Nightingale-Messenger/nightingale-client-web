@@ -1,1 +1,27 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+
+:root {
+  --color-primary-0: #BAD2E8;
+  --color-primary-1: #FFFFFF;
+  --color-primary-2: #E3EEF9;
+  --color-primary-3: #8CAECF;
+  --color-primary-4: #5D85AA;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  background: var(--color-primary-1);
+  color: #333;
+}
+
+ul {
+  list-style: none;
+}
