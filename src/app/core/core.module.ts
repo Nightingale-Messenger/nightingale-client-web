@@ -5,7 +5,8 @@ import {HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { UserService,
   AuthService,
-  JwtService } from './services';
+  JwtService,
+  ChatService} from './services';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { UserService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     UserService,
     AuthService,
-    JwtService
+    JwtService,
+    ChatService
   ]
 })
 export class CoreModule { }
