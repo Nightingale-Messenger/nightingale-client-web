@@ -4,20 +4,29 @@ import * as signalR from '@microsoft/signalr';
 import {environment} from '../../../environments/environment';
 import {JwtService} from './jwt.service';
 import {Message, User} from '../models';
-import {BehaviorSubject} from 'rxjs';
+import {Subject} from 'rxjs';
+import {UserService} from './user.service';
 
 @Injectable()
 export class ChatService {
+  private messages: Message[] = [];
+  private contacts: User[] = [];
+  public started = false;
+
   private hubConnection: signalR.HubConnection;
 
-  private messagesSubject: BehaviorSubject<Message[]> = new BehaviorSubject<Message[]>([]);
-  public messages = this.messagesSubject.asObservable();
+  private messagesSubject: Subject<Message> = new Subject<Message>();
+  public messagesObservable = this.messagesSubject.asObservable();
 
-  private contactsSubject: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
-  public contacts = this.contactsSubject.asObservable();
+  uploadedMessagesSubject: Subject<Message[]> = new Subject<Message[]>();
+  public uploadedMessagesObservable = this.uploadedMessagesSubject.asObservable();
+
+  private contactsSubject: Subject<User> = new Subject<User>();
+  public contactsObservable = this.contactsSubject.asObservable();
 
   constructor(private httpClient: HttpClient,
-              private jwtService: JwtService) {
+              private jwtService: JwtService,
+              private userService: UserService) {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(`${environment.apiUrl}/messagehub`, {
         accessTokenFactory: () => this.jwtService.accessToken,
@@ -26,13 +35,20 @@ export class ChatService {
       })
       .build();
 
-    this.startConnection();
+    // this.startConnection();
   }
 
-  private startConnection(): void {
-    this.hubConnection.start()
-      .then(() => console.log(' Chat connection started'))
-      .catch(err => console.log('Error while starting connection: ' + err));
+  public startConnection(): void {
+    if (!this.started) {
+      this.hubConnection.start()
+        .then(() => {
+          console.log(' Chat connection started');
+          this.started = true;
+          this.setupListeners();
+          this.askContacts();
+        })
+        .catch(err => console.log('Error while starting connection: ' + err));
+    }
   }
 
   public setupListeners(): void {
@@ -41,27 +57,40 @@ export class ChatService {
     });
 
     this.hubConnection.on('GetMessages', (res: Message[]) => {
-      this.messagesSubject.next(this.messagesSubject.value.concat(res));
+      if (res.length < 1) {
+        return;
+      }
+      this.messages = res.reverse().concat(this.messages);
+      // console.log(this.messages);
+      // this.messagesSubject.next(this.messagesSubject.value.concat(res));
+      this.uploadedMessagesSubject.next(res);
     });
 
     this.hubConnection.on('ReceiveMessage', (msg: Message) => {
-      this.messagesSubject.next(this.messagesSubject.value.concat([msg]));
-      if (!this.contactsSubject.value.find(value => value.id === msg.sender.id)) {
-        this.contactsSubject.value.push(msg.sender);
-        this.contactsSubject.next(this.contactsSubject.value);
+      // this.messagesSubject.next(this.messagesSubject.value.concat([msg]));
+      this.messages.push(msg);
+      this.messagesSubject.next(msg);
+      if (!this.contacts.find(value => value.id === msg.sender.id) &&
+        msg.sender.id !== this.userService.getId()) {
+        this.contacts.push(msg.sender);
+        this.contactsSubject.next(msg.sender);
       }
     });
 
     this.hubConnection.on('GetContacts', (res: User[]) => {
-      this.contactsSubject.next(this.contactsSubject.value.concat(res));
+      // this.contactsSubject.next(this.contactsSubject.value.concat(res));
+      this.contacts = this.contacts.concat(res);
+      for (const contact of res) {
+        this.contactsSubject.next(contact);
+      }
     });
   }
 
-  public getContacts(): void {
+  public askContacts(): void {
     this.hubConnection.invoke('GetContacts');
   }
 
-  public getLastMessagesFromUser(id: string): void {
+  public askLastMessagesFromUser(id: string): void {
     this.hubConnection.invoke('GetLastMessages', id);
   }
 
@@ -70,11 +99,23 @@ export class ChatService {
   }
 
   public sendMessage(receiverId: string, text: string): void {
+    if (text.trim() === '') {
+      return;
+    }
     this.hubConnection.invoke('Send', {
       SenderId: 'sender_id',
       ReceiverId: receiverId,
       Date: new Date(Date.now()).toISOString(),
       Text: text
     });
+  }
+
+  public getContacts(): User[] {
+    return this.contacts;
+  }
+
+  public getMessagesFrom(id: string): Message[] {
+    return this.messages.filter(m => m.receiver.id === id ||
+      m.sender.id === id);
   }
 }

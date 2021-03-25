@@ -1,0 +1,9 @@
+<div class="contacts">
+  <div *ngIf="contacts.length > 0">
+    <ul class="list">
+      <li *ngFor="let contact of contacts">
+        <app-contact [usr]="contact"></app-contact>
+      </li>
+    </ul>
+  </div>
+</div>

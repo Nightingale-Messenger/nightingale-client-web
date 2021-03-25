@@ -1,1 +1,1 @@
-{"version":3,"sourceRoot":"","sources":[],"names":[],"mappings":"","file":"chat.component.css"}
+{"version":3,"sourceRoot":"","sources":["chat.component.scss"],"names":[],"mappings":"AAAA;EACE;EACA;EACA;AAYA;AAMA;AAMA;AAKA;;AA5BA;EACE;EACA;EACA;EACA;;AAGF;EACE;EACA;;AAGF;EACE;EACA;;AAIF;EACE;EACA;;AAIF;EACE;;AAIF;EACE","file":"chat.component.css"}

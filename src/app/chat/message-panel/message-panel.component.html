@@ -1,0 +1,16 @@
+<div >
+  <div class="msg-list-container" (scroll)="onScroll($event)" #msgblock>
+    <ul *ngIf="id !== '';else noid">
+      <li *ngFor="let message of messages">
+        <app-message [msg]="message"></app-message>
+      </li>
+    </ul>
+  </div>
+  <app-send-msg-form *ngIf="id !== ''"></app-send-msg-form>
+</div>
+
+<ng-template #noid>
+  <div class="noid">
+    Select a chat to start messaging
+  </div>
+</ng-template>

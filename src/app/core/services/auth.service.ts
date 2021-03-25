@@ -6,6 +6,7 @@ import {Observable, of} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {catchError, map} from 'rxjs/operators';
 import {Tokens} from '../models';
+import {ChatService} from './chat.service';
 
 @Injectable()
 export class AuthService {
@@ -14,7 +15,8 @@ export class AuthService {
 
   constructor(private httpClient: HttpClient,
               private jwtService: JwtService,
-              private userService: UserService) {
+              private userService: UserService,
+              private chatService: ChatService) {
   }
 
   public tryPopulate(): void {
@@ -23,6 +25,7 @@ export class AuthService {
     if (this.jwtService.checkAccessTokenExp() && usr) {
       this.userService.changeCurrentUser(usr);
       this.userService.changeAuthStatus(true);
+      this.chatService.startConnection();
     } else if (this.jwtService.refreshToken !== '') {
       this.handleNewTokens(this.refresh());
     } else {
@@ -75,6 +78,7 @@ export class AuthService {
     tokens.subscribe(value => {
       if (value) {
         this.setAuth(value);
+        this.chatService.startConnection();
       } else {
         this.userService.changeAuthStatus(false);
       }
@@ -99,6 +103,7 @@ export class AuthService {
       this.userService.changeCurrentUser(usr);
       this.userService.changeAuthStatus(true);
       this.setupRefreshTimer();
+      this.chatService.startConnection();
     } else {
       this.jwtService.removeTokens();
       this.userService.changeAuthStatus(false);

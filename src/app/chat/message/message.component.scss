@@ -1,0 +1,29 @@
+.message-card {
+  padding: .3rem .6rem;
+  width: 40%;
+  border: none;
+  border-radius: 3rem;
+  background-color: var(--color-primary-2);
+  white-space: normal;
+  margin: .7rem;
+  .message-top {
+    display: flex;
+    justify-content: space-around;
+    p {
+      font-weight: bold;
+      display: inline-block;
+      font-size: 1.3rem;
+    }
+  }
+  p {
+    font-size: 1.7rem;
+  }
+}
+
+.message-wrapper {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 1.4rem;
+  overflow-wrap: break-word;
+  white-space: initial;
+}

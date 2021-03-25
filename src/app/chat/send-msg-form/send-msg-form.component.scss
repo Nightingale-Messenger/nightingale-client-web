@@ -1,0 +1,15 @@
+.sender-container {
+  display: flex;
+  flex-direction: row;
+  .msg-input {
+    font-size: 1.4rem;
+    padding: .3rem;
+    margin-right: 0;
+    width: 100%;
+  }
+
+  .msg-button {
+    width: 10%;
+    background-color: var(--color-primary-3);
+  }
+}

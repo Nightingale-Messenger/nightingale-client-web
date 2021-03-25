@@ -32,6 +32,10 @@ export class UserService {
     return this.currentUserSubject.value.userName;
   }
 
+  public getId(): string {
+    return this.currentUserSubject.value.id;
+  }
+
   public removeUser(): void {
     this.changeCurrentUser({} as User);
     this.changeAuthStatus(false);

@@ -1,1 +1,3 @@
-<p>contact works!</p>
+<div class="contact-card" [ngClass]="{'selected': selected}" (click)="onClick()">
+  <p>{{usr.userName}}</p>
+</div>

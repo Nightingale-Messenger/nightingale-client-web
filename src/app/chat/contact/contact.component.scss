@@ -1,0 +1,18 @@
+.contact-card {
+  background-color: var(--color-primary-1);
+  border: solid 1px var(--color-primary-2);
+  display: flex;
+  text-align: left;
+  vertical-align: center;
+  p {
+    font-size: 1.4rem;
+  }
+}
+
+.contact-card:hover:not(.selected) {
+  background-color: var(--color-primary-2);
+}
+
+.selected {
+  background-color: var(--color-primary-3);
+}

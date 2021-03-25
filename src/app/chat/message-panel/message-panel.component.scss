@@ -1,0 +1,36 @@
+.noid {
+  border: none;
+  border-radius: .9rem;
+  background-color: var(--color-primary-2);
+  width: 40%;
+  text-align: center;
+  margin: auto;
+  margin-top: 10rem;
+}
+
+.msg-list-container {
+  overflow: auto;
+  height: 600px;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: .7rem;
+  border-radius: .9rem;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--color-primary-1);
+  border-radius: .9rem;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary-2);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-3);
+}

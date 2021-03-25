@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {Message} from '../../core/models';
+import {ChatControlService} from '../chat-control.service';
 
 @Component({
   selector: 'app-message',
@@ -6,8 +8,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./message.component.scss']
 })
 export class MessageComponent implements OnInit {
+  // @ts-ignore
+  @Input() msg: Message;
+  public timeZone: string;
 
-  constructor() { }
+  constructor(private chatCtrl: ChatControlService) {
+    this.timeZone = chatCtrl.currTimeZone;
+  }
 
   ngOnInit(): void {
   }

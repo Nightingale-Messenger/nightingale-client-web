@@ -1,1 +1,9 @@
-<p>message works!</p>
+<div class="message-card">
+  <div class="message-top">
+    <p>{{msg.sender.userName}}</p>
+    <p>{{msg.dateTime | date : 'short': timeZone}}</p>
+  </div>
+  <div class="message-wrapper">
+    {{msg.text}}
+  </div>
+</div>

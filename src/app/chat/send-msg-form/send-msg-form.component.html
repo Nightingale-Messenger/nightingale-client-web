@@ -1,0 +1,6 @@
+<form [formGroup]="form" (ngSubmit)="SengMsg()">
+  <div class="sender-container">
+    <input formControlName="msg" class="msg-input">
+    <button type="button" (click)="SengMsg()" class="msg-button"><span class="material-icons">send</span></button>
+  </div>
+</form>

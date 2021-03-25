@@ -1,3 +1,35 @@
-
+.chat-container {
+  display: flex;
+  height: available;
+  flex-direction: row;
+  /* width */
+  /* Track */
+  /* Handle */
+  /* Handle on hover */
+}
+.chat-container .contacts-container {
+  width: 40%;
+  border: var(--color-primary-2) solid 1px;
+  overflow: auto;
+  height: 100%;
+}
+.chat-container .messages-container {
+  border: var(--color-primary-2) solid 1px;
+  width: 60%;
+}
+.chat-container ::-webkit-scrollbar {
+  width: 0.7rem;
+  border-radius: 0.9rem;
+}
+.chat-container ::-webkit-scrollbar-track {
+  background: var(--color-primary-1);
+  border-radius: 0.9rem;
+}
+.chat-container ::-webkit-scrollbar-thumb {
+  background: var(--color-primary-2);
+}
+.chat-container ::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-3);
+}
 
 /*# sourceMappingURL=chat.component.css.map */
