@@ -11,6 +11,7 @@ import {ChatService} from '../../core/services';
 export class MessagePanelComponent implements AfterViewChecked {
   public messages: Message[];
   public id = '';
+  public username = '';
   private lastHeight = 0;
   private lastPos = 0;
   private scrollComm = ScrollCommands.SKIP;
@@ -23,9 +24,10 @@ export class MessagePanelComponent implements AfterViewChecked {
               public chatService: ChatService) {
     this.messages = [];
     this.chatCtrl.selectedContact.subscribe(value => {
-      if (value !== '') {
-        this.messages = this.chatService.getMessagesFrom(value);
-        this.id = value;
+      if (value.id !== '') {
+        this.messages = this.chatService.getMessagesFrom(value.id);
+        this.id = value.id;
+        this.username = value.userName;
       }
     });
 
@@ -40,7 +42,7 @@ export class MessagePanelComponent implements AfterViewChecked {
       }
     });
 
-    this.chatService.uploadedMessagesSubject.subscribe(value => {
+    this.chatService.uploadedMessagesObservable.subscribe(value => {
       // console.log(value);
       this.lastHeight = this.scrollContainer.nativeElement.scrollHeight;
       this.lastPos = this.scrollContainer.nativeElement.scrollTop;
@@ -49,7 +51,7 @@ export class MessagePanelComponent implements AfterViewChecked {
     });
   }
 
-  public onScroll(event: Event): void {
+  public onScroll(): void {
     // console.log(this.scrollContainer.nativeElement.scrollTop);
     if (this.messages.length > 0 &&
       this.scrollContainer.nativeElement.scrollTop === 0) {

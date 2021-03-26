@@ -53,6 +53,6 @@ export class JwtService {
     if (!token) {
       return false;
     }
-    return Date.now() > this.getAccessTokenExp(token);
+    return Date.now() < this.getAccessTokenExp(token);
   }
 }

@@ -11,7 +11,7 @@
     <li class="left">
       <a class="item" routerLink="/">Home</a>
     </li>
-    <li class="left">
+    <li class="left" *ngIf="loggedIn">
       <a class="item" routerLink="/chat">Chat</a>
     </li>
 

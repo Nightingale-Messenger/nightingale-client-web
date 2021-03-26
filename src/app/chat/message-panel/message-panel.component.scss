@@ -13,6 +13,17 @@
   height: 600px;
 }
 
+.msg-list-header {
+  display: flex;
+  flex-direction: row;
+  padding: .2rem .8rem;
+  background-color: var(--color-primary-2);
+
+  p {
+    font-size: 1.4rem;
+  }
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: .7rem;

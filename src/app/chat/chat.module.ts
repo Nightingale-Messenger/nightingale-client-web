@@ -9,11 +9,18 @@ import { ContactsPanelComponent } from './contacts-panel/contacts-panel.componen
 import {ChatControlService} from './chat-control.service';
 import { SendMsgFormComponent } from './send-msg-form/send-msg-form.component';
 import {ReactiveFormsModule} from '@angular/forms';
+import { SearchFormComponent } from './search-form/search-form.component';
 
 
 
 @NgModule({
-  declarations: [ChatComponent, MessageComponent, ContactComponent, MessagePanelComponent, ContactsPanelComponent, SendMsgFormComponent],
+  declarations: [ChatComponent,
+    MessageComponent,
+    ContactComponent,
+    MessagePanelComponent,
+    ContactsPanelComponent,
+    SendMsgFormComponent,
+    SearchFormComponent],
   imports: [
     CommonModule,
     ChatRoutingModule,

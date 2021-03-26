@@ -12,6 +12,10 @@ export class ContactsPanelComponent implements OnInit {
 
   constructor(private chatNav: ChatControlService) {
     this.contacts = this.chatNav.contacts;
+
+    this.chatNav.contactsObservable.subscribe(value => {
+      this.contacts = value;
+    });
   }
 
   ngOnInit(): void {}

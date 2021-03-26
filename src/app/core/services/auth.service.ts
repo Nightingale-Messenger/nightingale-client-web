@@ -7,6 +7,7 @@ import {environment} from '../../../environments/environment';
 import {catchError, map} from 'rxjs/operators';
 import {Tokens} from '../models';
 import {ChatService} from './chat.service';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class AuthService {
@@ -16,17 +17,20 @@ export class AuthService {
   constructor(private httpClient: HttpClient,
               private jwtService: JwtService,
               private userService: UserService,
-              private chatService: ChatService) {
+              private chatService: ChatService,
+              private router: Router) {
   }
 
   public tryPopulate(): void {
     console.log('Trying to get auth data...');
     const usr = this.jwtService.parseUserFromToken();
     if (this.jwtService.checkAccessTokenExp() && usr) {
+      console.log('Found valid access token');
       this.userService.changeCurrentUser(usr);
       this.userService.changeAuthStatus(true);
       this.chatService.startConnection();
     } else if (this.jwtService.refreshToken !== '') {
+      console.log('Found valid refresh token');
       this.handleNewTokens(this.refresh());
     } else {
       this.userService.changeAuthStatus(false);
@@ -60,9 +64,12 @@ export class AuthService {
   }
 
   public logout(): void {
+    this.chatService.terminateConnection();
     this.httpClient.post(`${environment.apiUrl}/auth/revoke`, {refreshToken: this.jwtService.refreshToken}).subscribe();
     this.jwtService.removeTokens();
     this.userService.removeUser();
+    this.chatService.clear();
+    this.router.navigate(['']);
   }
 
   public refresh(): Observable<Tokens | null> {

@@ -1,5 +1,8 @@
-<div >
-  <div class="msg-list-container" (scroll)="onScroll($event)" #msgblock>
+<div>
+  <div class="msg-list-header">
+    <p>{{username}}</p>
+  </div>
+  <div class="msg-list-container" (scroll)="onScroll()" #msgblock>
     <ul *ngIf="id !== '';else noid">
       <li *ngFor="let message of messages">
         <app-message [msg]="message"></app-message>

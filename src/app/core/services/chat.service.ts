@@ -4,7 +4,7 @@ import * as signalR from '@microsoft/signalr';
 import {environment} from '../../../environments/environment';
 import {JwtService} from './jwt.service';
 import {Message, User} from '../models';
-import {Subject} from 'rxjs';
+import {BehaviorSubject, Subject} from 'rxjs';
 import {UserService} from './user.service';
 
 @Injectable()
@@ -18,11 +18,14 @@ export class ChatService {
   private messagesSubject: Subject<Message> = new Subject<Message>();
   public messagesObservable = this.messagesSubject.asObservable();
 
-  uploadedMessagesSubject: Subject<Message[]> = new Subject<Message[]>();
+  private uploadedMessagesSubject: Subject<Message[]> = new Subject<Message[]>();
   public uploadedMessagesObservable = this.uploadedMessagesSubject.asObservable();
 
   private contactsSubject: Subject<User> = new Subject<User>();
   public contactsObservable = this.contactsSubject.asObservable();
+
+  private searchResultSubject = new BehaviorSubject<User[]>([]);
+  public searchResult = this.searchResultSubject.asObservable();
 
   constructor(private httpClient: HttpClient,
               private jwtService: JwtService,
@@ -51,6 +54,18 @@ export class ChatService {
     }
   }
 
+  public terminateConnection(): void {
+    if (this.started) {
+      this.hubConnection.stop()
+        .then(() => {
+          this.started = false;
+          console.log('Chat connection terminated');
+          }
+        )
+        .catch(err => console.log('Error while terminating connection: ' + err));
+    }
+  }
+
   public setupListeners(): void {
     this.hubConnection.on('ReportError', (msg: string) => {
       console.error(msg);
@@ -70,11 +85,14 @@ export class ChatService {
       // this.messagesSubject.next(this.messagesSubject.value.concat([msg]));
       this.messages.push(msg);
       this.messagesSubject.next(msg);
-      if (!this.contacts.find(value => value.id === msg.sender.id) &&
-        msg.sender.id !== this.userService.getId()) {
+      if (!this.contacts.find(value => value.id === msg.sender.id)) {
         this.contacts.push(msg.sender);
         this.contactsSubject.next(msg.sender);
       }
+    });
+
+    this.hubConnection.on('GetFindResults', (data: User[]) => {
+      this.searchResultSubject.next(data);
     });
 
     this.hubConnection.on('GetContacts', (res: User[]) => {
@@ -115,7 +133,23 @@ export class ChatService {
   }
 
   public getMessagesFrom(id: string): Message[] {
-    return this.messages.filter(m => m.receiver.id === id ||
-      m.sender.id === id);
+    return this.messages.filter(m => m.receiver.id === id &&
+      m.sender.id === this.userService.getId() ||
+      m.sender.id === id &&
+      m.receiver.id === this.userService.getId());
+  }
+
+  public search(value: string): void {
+    if (!value ||
+      value === '') {
+      this.searchResultSubject.next([]);
+      return;
+    }
+    this.hubConnection.invoke('FindByUserName', value);
+  }
+
+  public clear(): void {
+    this.messages = [];
+    this.contacts = [];
   }
 }
